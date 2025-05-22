@@ -30,39 +30,63 @@ class Woo_Units_Display {
      * Constructor
      */
     public function __construct() {
-        // Hook to display unit_title before variation add to cart section
-        add_action('woocommerce_before_variations_form', array($this, 'display_unit_title_before_variations'));
-        
         // Hook to display unit in cart
         add_filter('woocommerce_cart_item_name', array($this, 'display_unit_in_cart'), 10, 3);
         
-        // Enqueue styles
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
+        // Enqueue styles and scripts
+        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        
+        // AJAX handlers
+        add_action('wp_ajax_get_unit_title', array($this, 'get_unit_title_ajax'));
+        add_action('wp_ajax_nopriv_get_unit_title', array($this, 'get_unit_title_ajax'));
     }
     
     /**
-     * Enqueue plugin styles
+     * Enqueue plugin styles and scripts
      */
-    public function enqueue_styles() {
+    public function enqueue_scripts() {
         // Enqueue on both product pages and cart pages
         if (is_product() || is_cart()) {
             wp_enqueue_style('woo-units-style', plugins_url('assets/css/woo-units.css', __FILE__), array(), '1.0.0');
+            
+            // Enqueue JavaScript только на странице товара
+            if (is_product()) {
+                wp_enqueue_script('woo-units-script', plugins_url('assets/js/woo-units.js', __FILE__), array('jquery'), '1.0.0', true);
+                
+                // Передаем параметры в JavaScript
+                wp_localize_script('woo-units-script', 'woo_units_params', array(
+                    'ajax_url' => admin_url('admin-ajax.php'),
+                    'nonce' => wp_create_nonce('woo_units_nonce')
+                ));
+            }
         }
     }
 
     /**
-     * Display unit_title before variations form
+     * AJAX callback to get unit_title
      */
-    public function display_unit_title_before_variations() {
-        global $product;
+    public function get_unit_title_ajax() {
+        // Проверяем nonce для безопасности
+        check_ajax_referer('woo_units_nonce', 'nonce');
         
-        // Get unit_title value from custom field
-        $unit_title = get_post_meta($product->get_id(), 'unit_title', true);
+        $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+        $response = array('success' => false);
         
-        // Only display if unit_title is set
-        if (!empty($unit_title)) {
-            echo '<div class="unit-title-before-variations">' . esc_html($unit_title) . '</div>';
+        if ($product_id > 0) {
+            // Получаем значение unit_title
+            $unit_title = get_post_meta($product_id, 'unit_title', true);
+            
+            if (!empty($unit_title)) {
+                $response = array(
+                    'success' => true,
+                    'data' => array(
+                        'unit_title' => esc_html($unit_title)
+                    )
+                );
+            }
         }
+        
+        wp_send_json($response);
     }
     
     /**
