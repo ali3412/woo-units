@@ -1,4 +1,4 @@
-ыва# WooCommerce Units Display
+# WooCommerce Units Display
 
 Плагин для WordPress, который отображает значение произвольного поля "unit" перед полем выбора количества на странице товара WooCommerce.
 
