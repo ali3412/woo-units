@@ -1,0 +1,15 @@
+.product-unit {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Выравнивание на странице товара */
+.woocommerce div.product form.cart div.quantity {
+    display: flex;
+    align-items: center;
+}
+
+.woocommerce div.product form.cart .product-unit + div.quantity {
+    margin-left: 5px;
+}

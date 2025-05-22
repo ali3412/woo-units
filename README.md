@@ -1,37 +1,38 @@
 # WooCommerce Units Display
 
-A simple WordPress plugin that displays product units before the quantity selector on WooCommerce product pages.
+Плагин для WordPress, который отображает значение произвольного поля "unit" перед полем выбора количества на странице товара WooCommerce.
 
-## Description
+## Описание
 
-This plugin adds the ability to display a unit of measurement (like kg, pcs, liters, etc.) before the quantity selector on WooCommerce product pages. The unit is pulled from a custom field called 'unit' that you can set for each product.
+Этот плагин добавляет отображение единиц измерения товара (хранящихся в произвольном поле "unit") непосредственно перед полем выбора количества на странице товара WooCommerce.
 
-## Installation
+## Установка
 
-1. Upload the `woo-units` folder to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to your WooCommerce product edit page
-4. In the Product Data section, add a custom field named 'unit' with your desired unit value (e.g., "kg", "pcs", "liters")
+1. Загрузите папку `woo-units` в директорию `/wp-content/plugins/` вашего сайта
+2. Активируйте плагин через меню 'Плагины' в WordPress
+3. Добавьте для товаров произвольное поле с названием "unit" и нужным значением (например, "кг", "шт", "л" и т.д.)
 
-## Usage
+## Использование
 
-1. Edit a WooCommerce product
-2. Scroll down to the "Product data" section
-3. Click on the "Custom Fields" tab (enable it from Screen Options if not visible)
-4. Add a new custom field:
-   - Name: `unit`
-   - Value: Your desired unit (e.g., "kg", "pcs", "liters")
-5. Update the product
+1. Откройте товар для редактирования в админ-панели WordPress
+2. Перейдите к разделу "Произвольные поля" (Custom Fields)
+3. Добавьте новое поле с названием "unit"
+4. В значение поля введите нужную единицу измерения (например, "кг", "шт", "л")
+5. Обновите/опубликуйте товар
 
-The unit will now be displayed above the quantity selector on the single product page.
+После этого указанная единица измерения будет отображаться перед полем выбора количества на странице товара.
 
-## Requirements
+## Скриншоты
 
-- WordPress 5.2 or higher
-- WooCommerce 4.0 or higher
-- PHP 7.2 or higher
+1. Пример отображения единицы измерения "кг" перед полем выбора количества
 
-## Changelog
+## Требования
+
+* WordPress 5.0 или выше
+* WooCommerce 4.0 или выше
+* PHP 7.2 или выше
+
+## Версии
 
 ### 1.0.0
-* Initial release
+* Первый релиз
