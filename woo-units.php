@@ -30,8 +30,11 @@ class Woo_Units_Display {
      * Constructor
      */
     public function __construct() {
-        // Hook to display unit before quantity input
-        add_action('woocommerce_before_add_to_cart_quantity', array($this, 'display_unit_before_quantity'));
+        // Hook to display unit_title before variation add to cart section
+        add_action('woocommerce_before_variations_form', array($this, 'display_unit_title_before_variations'));
+        
+        // Hook to display unit in cart
+        add_filter('woocommerce_cart_item_name', array($this, 'display_unit_in_cart'), 10, 3);
         
         // Enqueue styles
         add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
@@ -41,25 +44,48 @@ class Woo_Units_Display {
      * Enqueue plugin styles
      */
     public function enqueue_styles() {
-        // Only enqueue on single product pages
-        if (is_product()) {
+        // Enqueue on both product pages and cart pages
+        if (is_product() || is_cart()) {
             wp_enqueue_style('woo-units-style', plugins_url('assets/css/woo-units.css', __FILE__), array(), '1.0.0');
         }
     }
 
     /**
-     * Display unit value before quantity input
+     * Display unit_title before variations form
      */
-    public function display_unit_before_quantity() {
+    public function display_unit_title_before_variations() {
         global $product;
         
+        // Get unit_title value from custom field
+        $unit_title = get_post_meta($product->get_id(), 'unit_title', true);
+        
+        // Only display if unit_title is set
+        if (!empty($unit_title)) {
+            echo '<div class="unit-title-before-variations">' . esc_html($unit_title) . '</div>';
+        }
+    }
+    
+    /**
+     * Display unit in cart
+     */
+    public function display_unit_in_cart($product_name, $cart_item, $cart_item_key) {
+        // Check if we're on cart page
+        if (!is_cart()) {
+            return $product_name;
+        }
+        
+        // Get product ID
+        $product_id = $cart_item['product_id'];
+        
         // Get unit value from custom field
-        $unit = get_post_meta($product->get_id(), 'unit', true);
+        $unit = get_post_meta($product_id, 'unit', true);
         
         // Only display if unit is set
         if (!empty($unit)) {
-            echo '<div class="product-unit">' . esc_html($unit) . '</div>';
+            $product_name .= '<div class="product-unit">' . esc_html($unit) . '</div>';
         }
+        
+        return $product_name;
     }
 }
 
