@@ -106,7 +106,7 @@ class Woo_Units_Display {
         
         // Only display if unit is set
         if (!empty($unit)) {
-            $product_name .= '<div class="product-unit">' . esc_html($unit) . '</div>';
+            $product_name .= '<div class="product-unit">(' . esc_html($unit) . ')</div>';
         }
         
         return $product_name;
